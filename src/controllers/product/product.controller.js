@@ -1,11 +1,16 @@
+/* eslint-disable object-curly-newline */
+/* eslint-disable quotes */
 /* eslint-disable import/prefer-default-export */
-import { Product } from '../../models';
-import { successResponse, errorResponse, deleteFile } from '../../helpers';
+import { Product } from "../../models";
+import { successResponse, errorResponse, deleteFile } from "../../helpers";
 
 export const allProduct = async (req, res) => {
   try {
     const product = await Product.findAndCountAll({
-      order: [['createdAt', 'DESC'], ['name', 'ASC']],
+      order: [
+        ["createdAt", "DESC"],
+        ["name", "ASC"],
+      ],
     });
     return successResponse(req, res, { product });
   } catch (error) {
@@ -13,63 +18,75 @@ export const allProduct = async (req, res) => {
   }
 };
 
-// export const uploadProduct = async (req, res) => {
-//   // console.log(req);
-//   try {
-//     if (!req.file) {
-//       return res.status(400).json({
-//         success: false,
-//         errorMessage: 'Please upload a file',
-//       });
-//     }
-//     const {
-//       name, buyPrice, sellPrice, stockLeft,
-//     } = req.body;
-//     const { photo } = req.file;
+export const productById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findOne({
+      where: {
+        id,
+      },
+    });
+    return successResponse(req, res, { product });
+  } catch (error) {
+    return errorResponse(req, res, error.message);
+  }
+};
 
-//     // Generate a unique filename for the uploaded photo
-//     const photoFilename = `${uuidv4()}.${photo.name.split('.').pop()}`;
+export const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+    const product = await Product.findByPk(id);
+    if (!product) {
+      return {
+        success: false,
+        message: "Product Not Found",
+        status: 404,
+      };
+    }
+    await product.update(updates);
+    return successResponse(req, res, { product: updates });
+  } catch (error) {
+    return errorResponse(req, res, error.message);
+  }
+};
 
-//     // Save the uploaded photo to the public directory
-//     const photoPath = path.join(__dirname, '..', 'public', 'uploads', 'products', photoFilename);
-//     await photo.mv(photoPath);
-
-//     // Save the product information to the database
-//     const product = await Product.create({
-//       name,
-//       buyPrice,
-//       sellPrice,
-//       stockLeft,
-//       photo: photoFilename,
-//       userId: req.user.id,
-//     });
-
-//     return successResponse(req, res, { product });
-//   } catch (error) {
-//     return errorResponse(req, res, error.message);
-//   }
-// };
+export const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findByPk(id);
+    if (!product) {
+      return {
+        success: false,
+        message: "Product Not Found",
+        status: 404,
+      };
+    }
+    await product.destroy();
+    return successResponse(req, res, { message: "Successfully delete data" });
+  } catch (error) {
+    return errorResponse(req, res, error.message);
+  }
+};
 
 export const uploadProduct = async (req, res) => {
   try {
-    const {
-      name, buyPrice, sellPrice, stockLeft,
-    } = req.body;
+    const { name, buyPrice, sellPrice, stockLeft } = req.body;
     const { filename, mimetype, size } = req.file;
     if (size > 100000) {
       deleteFile(filename);
       return res.status(413).send({
         success: false,
-        message: 'File too large, file size exceeded 100KB',
+        message: "File too large, file size exceeded 100KB",
         status: 413,
       });
     }
 
-    if (mimetype !== 'image/jpeg' && mimetype !== 'image/png') {
+    if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
       deleteFile(filename);
       return res.status(413).send({
         success: false,
-        message: 'Only JPG and PNG files are allowed',
+        message: "Only JPG and PNG files are allowed",
         status: 413,
       });
     }
@@ -83,7 +100,6 @@ export const uploadProduct = async (req, res) => {
       photo: filename,
       userId: req.user.id,
     });
-
 
     // Return a response indicating successful upload
     return res.status(200).json({
