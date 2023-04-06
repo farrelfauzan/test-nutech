@@ -1,7 +1,9 @@
-
+/* eslint-disable linebreak-style */
+/* eslint-disable no-unused-vars */
+/* eslint-disable linebreak-style */
 
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.bulkInsert(
+  up: (queryInterface, _Sequelize) => queryInterface.bulkInsert(
     'Users',
     [
       {
@@ -26,5 +28,5 @@ module.exports = {
     {},
   ),
 
-  down: (queryInterface, Sequelize) => queryInterface.bulkDelete('Users', null, {}),
+  down: (queryInterface, _Sequelize) => queryInterface.bulkDelete('Users', null, {}),
 };

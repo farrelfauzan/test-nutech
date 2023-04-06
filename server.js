@@ -1,3 +1,6 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable no-plusplus */
+/* eslint-disable linebreak-style */
 require('@babel/register');
 /* eslint-disable no-console */
 const chalk = require('chalk');
@@ -29,26 +32,26 @@ const setupWorkerProcesses = () => {
     workers.push(cluster.fork());
 
     // Receive messages from worker process
-    workers[i].on('message', function (message) {
+    workers[i].on('message', (message) => {
       console.log(message);
     });
   }
 
   // Process is clustered on a core and process id is assigned
-  cluster.on('online', function (worker) {
+  cluster.on('online', (worker) => {
     console.log(`Worker ${worker.process.pid} is listening`);
   });
 
   // If any of the worker process dies then start a new one by simply forking another one
-  cluster.on('exit', function (worker, code, signal) {
+  cluster.on('exit', (worker, code, signal) => {
     console.log(
-      `Worker ${worker.process.pid} died with code: ${code}, and signal: ${signal}`
+      `Worker ${worker.process.pid} died with code: ${code}, and signal: ${signal}`,
     );
     console.log('Starting a new worker');
     cluster.fork();
     workers.push(cluster.fork());
     // Receive messages from worker process
-    workers[workers.length - 1].on('message', function (message) {
+    workers[workers.length - 1].on('message', (message) => {
       console.log(message);
     });
   });
@@ -57,7 +60,7 @@ const setupWorkerProcesses = () => {
 // Setup an express server and define port to listen all incoming requests for this application
 const setUpExpress = () => {
   dotenv.config({ path: '.env' });
-  
+
   const port = process.env.APP_PORT || 3000;
 
   const server = app.listen(port, () => {

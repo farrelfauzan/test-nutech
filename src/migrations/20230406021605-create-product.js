@@ -2,31 +2,35 @@
 
 
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Users', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Products', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: Sequelize.INTEGER,
     },
-    firstName: {
+    userId: {
+      allowNull: false,
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'Users', // name of the referenced model
+        key: 'id', // primary key of the referenced model
+      },
+    },
+    name: {
       type: Sequelize.STRING,
     },
-    lastName: {
+    photo: {
       type: Sequelize.STRING,
     },
-    email: {
+    buyPrice: {
       type: Sequelize.STRING,
     },
-    password: {
+    sellPrice: {
       type: Sequelize.STRING,
     },
-    profilePic: {
-      type: Sequelize.STRING,
-    },
-    isAdmin: {
-      type: Sequelize.BOOLEAN,
-      defaultValue: false,
+    stockLeft: {
+      type: Sequelize.INTEGER,
     },
     createdAt: {
       allowNull: false,
@@ -37,5 +41,5 @@ module.exports = {
       type: Sequelize.DATE,
     },
   }),
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('Users'),
+  down: (queryInterface, _Sequelize) => queryInterface.dropTable('Products'),
 };

@@ -1,3 +1,9 @@
+/* eslint-disable no-console */
+/* eslint-disable no-useless-escape */
+/* eslint-disable no-plusplus */
+import path from 'path';
+import fs from 'fs';
+
 export const successResponse = (req, res, data, code = 200) => res.send({
   code,
   data,
@@ -41,4 +47,17 @@ export const uniqueId = (length = 13) => {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
+};
+
+export const deleteFile = (filePath) => {
+  // Construct the full file path by joining the file path with the public directory path
+  const fullPath = path.join(__dirname, '../../public/uploads', filePath);
+  // Use fs.unlink to delete the file
+  fs.unlink(fullPath, (err) => {
+    if (err) {
+      // Handle the error if any
+      console.error(`Error deleting file: ${filePath}`);
+      console.error(err);
+    }
+  });
 };

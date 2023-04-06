@@ -23,6 +23,7 @@ app.use(
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.static('./public'));
 app.use('/pub', publicRoutes);
 app.use('/api', apiMiddleware, apiRoutes);
 app.use('/api/admin', apiMiddleware, adminMiddleware, adminRoutes);
