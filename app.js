@@ -23,7 +23,7 @@ app.use(
   })
 );
 
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(bodyParser.json());
 app.use(express.static("./public"));
 app.use("/pub", publicRoutes);
