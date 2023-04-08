@@ -17,13 +17,19 @@ dotenv.config();
 require("./src/config/sequelize");
 
 const app = express();
+const corsOptions = {
+  origin: 'http://localhost:3000', // specify the allowed origin(s)
+  methods: ['GET', 'POST', 'DELETE', 'PUT'], // specify the allowed HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // specify the allowed headers
+  credentials: true, // enable sending cookies and other credentials
+};
 app.use(
   bodyParser.urlencoded({
     extended: true,
   })
 );
 
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.static("./public"));
 app.use("/pub", publicRoutes);
